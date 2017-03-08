@@ -2,14 +2,21 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
 var userSchema = mongoose.Schema({
-  local : {
+  local: {
     username: String,
     password: String
   },
 
-  signupDate : { type: Date, default: Date.now() },
+  twitter: {
+    id: String,
+    token: String,
+    displayName: String,
+    username: String
+  },
 
-  favorites : {
+  signupDate: { type: Date, default: Date.now() },
+
+  favorites: {
     color: String,
     luckyNumber: Number
   }

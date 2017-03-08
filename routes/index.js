@@ -55,10 +55,28 @@ router.get('/logout', function(req, res, next) {
 });
 
 
+/* GET Twitter authentication */
+router.get('/auth/twitter', passport.authenticate('twitter'));
+
+
+/* GET to handle response from Twitter when user has authenticated
+ (or failed to authenticate) */
+router.get('/auth/twitter/callback', passport.authenticate('twitter', {
+  successRedirect: '/secret',
+  failureRedirect: '/'
+}));
+
+
 
 /* GET secret page. Note isLoggedIn middleware - verify if user is logged in */
 router.get('/secret', isLoggedIn, function(req, res, next) {
+
+  if (req.user.twitter) {
+    var twitterName = req.user.twitter.displayName;
+  }
+
   res.render('secret', { username : req.user.local.username,
+    twitterName: twitterName,
     signupDate: req.user.signupDate,
     favorites: req.user.favorites });
 });
@@ -115,6 +133,7 @@ router.post('/saveSecrets', isLoggedIn, function(req, res, next){
  */
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
+    console.log('not auth')
     return next();
   }
   res.redirect('/login');
